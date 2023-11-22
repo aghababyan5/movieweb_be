@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UserRequest;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
 
-class UserRegisterController extends Controller
+class GetUserController extends Controller
 {
     protected $userService;
 
@@ -16,10 +15,8 @@ class UserRegisterController extends Controller
         $this->userService = $userService;
     }
 
-    public function __invoke(UserRequest $request
-    ): JsonResponse {
-        $this->userService->store($request->validated());
-
-        return response()->json(['message' => 'User created successfully']);
+    public function __invoke(): JsonResponse
+    {
+        return response()->json($this->userService->getAuthUser());
     }
 }

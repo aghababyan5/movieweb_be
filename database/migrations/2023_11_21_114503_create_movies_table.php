@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->string('release_date', 10);
             $table->string('country');
             $table->string('genre', 200);
-            $table->integer('duration');
+            $table->string('duration', 3);
             $table->text('description');
             $table->text('img');
             $table->text('video')->nullable();

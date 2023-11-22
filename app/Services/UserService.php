@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class UserService
 {
@@ -13,5 +14,15 @@ class UserService
             'email' => $data['email'],
             'password' => $data['password']
         ]);
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->token()->revoke();
+    }
+
+    public function getAuthUser()
+    {
+        return auth()->user();
     }
 }
