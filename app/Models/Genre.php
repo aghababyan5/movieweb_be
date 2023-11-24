@@ -16,9 +16,6 @@ class Genre extends Model
     {
         return $this->belongsToMany(
             Movie::class,
-            'genre_post',
-            'genre_id',
-            'post_id'
         );
     }
 }

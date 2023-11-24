@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\Genre;
 use App\Models\Movie;
+use Illuminate\Database\Eloquent\Collection;
 
 class MovieService
 {
@@ -50,5 +52,14 @@ class MovieService
         ]);
 
         return response()->noContent();
+    }
+
+    public function getAllGenres(): Collection
+    {
+        return Genre::all();
+    }
+
+    public function getMoviesByGenre($id)
+    {
     }
 }

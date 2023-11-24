@@ -10,11 +10,11 @@ use Illuminate\Http\JsonResponse;
 
 class UpdateMovieController extends Controller
 {
-    protected $movieService;
+    protected $service;
 
     public function __construct(MovieService $movieService)
     {
-        $this->movieService = $movieService;
+        $this->service = $movieService;
     }
 
     public function __invoke(MovieUpdateRequest $request, $id): JsonResponse

@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Movie;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\MovieRequest;
 use App\Services\MovieService;
 
-class StoreMovieController extends Controller
+class GetGenresController extends Controller
 {
     protected $service;
 
@@ -15,13 +14,12 @@ class StoreMovieController extends Controller
         $this->service = $movieService;
     }
 
-    public function __invoke(MovieRequest $request)
+    public function __invoke()
     {
-        $this->service->store($request->validated());
+        $genres = $this->service->getAllGenres();
 
         return response()->json([
-            'message' => 'Movie stored successfully'
+            'genres' => $genres
         ]);
     }
-
 }

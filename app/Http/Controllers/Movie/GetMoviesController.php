@@ -7,16 +7,16 @@ use App\Services\MovieService;
 
 class GetMoviesController extends Controller
 {
-    protected $movieService;
+    protected $service;
 
     public function __construct(MovieService $movieService)
     {
-        $this->movieService = $movieService;
+        $this->service = $movieService;
     }
 
     public function __invoke()
     {
-        $movies = $this->movieService->getAll();
+        $movies = $this->service->getAll();
 
         return response()->json([
             'movies' => $movies

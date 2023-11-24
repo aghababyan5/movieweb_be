@@ -8,16 +8,16 @@ use Illuminate\Http\JsonResponse;
 
 class DeleteMovieController extends Controller
 {
-    protected $movieService;
+    protected $service;
 
     public function __construct(MovieService $movieService)
     {
-        $this->movieService = $movieService;
+        $this->service = $movieService;
     }
 
     public function __invoke($id): JsonResponse
     {
-        $this->movieService->destroy($id);
+        $this->service->destroy($id);
 
         return response()->json([
             'message' => 'Movie deleted successfully'
