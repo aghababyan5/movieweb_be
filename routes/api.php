@@ -7,6 +7,7 @@ use App\Http\Controllers\Movie\DeleteMovieController;
 use App\Http\Controllers\Movie\GetGenresController;
 use App\Http\Controllers\Movie\GetMovieController;
 use App\Http\Controllers\Movie\GetMoviesController;
+use App\Http\Controllers\Movie\GetReleaseDatesController;
 use App\Http\Controllers\Movie\StoreMovieController;
 use App\Http\Controllers\Movie\UpdateMovieController;
 use Illuminate\Support\Facades\Route;
@@ -23,17 +24,23 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['middleware' => 'api'], function () {
-    Route::post('/register', UserRegisterController::class);
-    Route::post('/movies', StoreMovieController::class);
-    Route::get('/movies', GetMoviesController::class);
-    Route::get('/movies/{id}', GetMovieController::class);
-    Route::delete('/movies/{id}', DeleteMovieController::class);
-    Route::put('/movies/{id}', UpdateMovieController::class);
-    Route::get('/genres', GetGenresController::class);
-    Route::get('/release_dates', GetGenresController``::class);
+    Route::post('/register', UserRegisterController::class); // tested
+    Route::post('/movies', StoreMovieController::class); // tested
+    Route::get('/movies', GetMoviesController::class); // tested
+    Route::get('/movies/{id}', GetMovieController::class); // tested
+    Route::delete('/movies/{id}', DeleteMovieController::class); // tested
+    Route::put('/movies/{id}', UpdateMovieController::class); // tested
+    Route::get('/genres', GetGenresController::class); // tested
+    Route::get('/release_dates', GetReleaseDatesController::class); // tested
     Route::group(['middleware' => 'auth:api'], function () {
-        Route::post('/logout', LogoutController::class);
-        Route::get('/user', GetUserController::class);
+        Route::post(
+            '/logout',
+            LogoutController::class
+        ); // tested (with access_token)
+        Route::get(
+            '/user',
+            GetUserController::class
+        ); // tested (with access token)
     });
 });
 

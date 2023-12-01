@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Movie;
 
 use App\Http\Controllers\Controller;
 use App\Services\MovieService;
+use Illuminate\Http\JsonResponse;
 
 class GetGenresController extends Controller
 {
@@ -14,7 +15,7 @@ class GetGenresController extends Controller
         $this->service = $movieService;
     }
 
-    public function __invoke()
+    public function __invoke(): JsonResponse
     {
         $genres = $this->service->getAllGenres();
 

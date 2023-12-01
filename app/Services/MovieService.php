@@ -4,11 +4,15 @@ namespace App\Services;
 
 use App\Models\Genre;
 use App\Models\Movie;
+use App\Models\ReleaseDate;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Response;
 
 class MovieService
 {
-    public function store(array $data)
+    public function store(array $data): Model|Builder
     {
         return Movie::query()->create([
             'title' => $data['title'],
@@ -22,7 +26,7 @@ class MovieService
         ]);
     }
 
-    public function getAll()
+    public function getAll(): Collection
     {
         return Movie::all();
     }
@@ -37,7 +41,7 @@ class MovieService
         return Movie::find($id)->delete();
     }
 
-    public function update(array $data)
+    public function update(array $data): Response
     {
         $movie = Movie::query()->where('id', $data['id']);
 
@@ -59,7 +63,9 @@ class MovieService
         return Genre::all();
     }
 
-    public function getMoviesByGenre($id)
+    public function getReleaseDates(): Collection
     {
+        return ReleaseDate::all();
     }
+
 }
