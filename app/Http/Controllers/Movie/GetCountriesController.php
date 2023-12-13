@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Movie;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\MovieRequest;
 use App\Services\MovieService;
 use Illuminate\Http\JsonResponse;
 
-class StoreMovieController extends Controller
+class GetCountriesController extends Controller
 {
 
     protected $service;
@@ -17,12 +16,12 @@ class StoreMovieController extends Controller
         $this->service = $movieService;
     }
 
-    public function __invoke(MovieRequest $request): JsonResponse
+    public function __invoke(): JsonResponse
     {
-        $this->service->store($request->validated());
+        $countries = $this->service->getCountries();
 
         return response()->json([
-            'message' => 'Movie stored successfully',
+            'countries' => $countries,
         ]);
     }
 

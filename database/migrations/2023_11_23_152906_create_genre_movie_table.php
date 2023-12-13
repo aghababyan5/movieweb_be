@@ -5,6 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
+
     /**
      * Run the migrations.
      */
@@ -12,8 +13,12 @@ return new class extends Migration {
     {
         Schema::create('genre_movie', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('genre_id')->constrained('genres');
-            $table->foreignId('movie_id')->constrained('movies');
+            $table->foreignId('genre_id')
+                ->constrained('genres')
+                ->cascadeOnDelete();
+            $table->foreignId('movie_id')
+                ->constrained('movies')
+                ->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -25,4 +30,5 @@ return new class extends Migration {
     {
         Schema::dropIfExists('genre_movie');
     }
+
 };

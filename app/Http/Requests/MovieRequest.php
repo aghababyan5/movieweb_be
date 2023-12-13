@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class MovieRequest extends FormRequest
 {
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -22,14 +23,18 @@ class MovieRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string',
+            'title'        => 'required|string',
             'release_date' => 'required|string|max:10',
-            'country' => 'required|string',
-            'genre' => 'required|string',
-            'duration' => 'required|string|max:3',
-            'description' => 'required|string',
-            'img' => 'required|string',
-            'video' => 'required|string'
+            'country'      => 'required|string',
+            'genres'       => 'required|array',
+            'genres.*'     => 'required|string',
+            'duration'     => 'required|string|max:3',
+            'description'  => 'required|string',
+            'img'          => 'required|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'img_slider'   => 'required|image|mimes:jpg,jpeg,png,gif',
+            'video'        => 'required|string',
+            'imdb_score'   => 'required|numeric|regex:/^\d+(\.\d{1})?$/',
         ];
     }
+
 }

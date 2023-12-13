@@ -22,7 +22,7 @@ class UserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => 'required|string|unique:users|regex:/^\S*$/',
+            'username' => 'required|string|unique:users|regex:/^\S*$/', // without spaces
             'email' => 'required|email|unique:users',
             'password' => 'required|string|confirmed|min:8',
             'password_confirmation' => 'required|min:8',

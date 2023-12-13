@@ -5,6 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
+
     /**
      * Run the migrations.
      */
@@ -15,11 +16,12 @@ return new class extends Migration {
             $table->string('title');
             $table->string('release_date', 10);
             $table->string('country');
-            $table->string('genre', 200);
             $table->string('duration', 3);
             $table->text('description');
-            $table->text('img');
-            $table->text('video')->nullable();
+            $table->string('img_slider');
+            $table->string('img');
+            $table->text('video');
+            $table->decimal('imdb_score', 2, 1);
             $table->timestamps();
         });
     }
@@ -31,4 +33,5 @@ return new class extends Migration {
     {
         Schema::dropIfExists('movies');
     }
+
 };

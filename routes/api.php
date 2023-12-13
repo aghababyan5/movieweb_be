@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\GetUserController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\UserRegisterController;
 use App\Http\Controllers\Movie\DeleteMovieController;
+use App\Http\Controllers\Movie\GetCountriesController;
 use App\Http\Controllers\Movie\GetGenresController;
 use App\Http\Controllers\Movie\GetMovieController;
 use App\Http\Controllers\Movie\GetMoviesController;
@@ -25,12 +26,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'api'], function () {
     Route::post('/register', UserRegisterController::class); // tested
-    Route::post('/movies', StoreMovieController::class); // tested
+    Route::post('/movie', StoreMovieController::class); // tested
     Route::get('/movies', GetMoviesController::class); // tested
     Route::get('/movies/{id}', GetMovieController::class); // tested
     Route::delete('/movies/{id}', DeleteMovieController::class); // tested
     Route::put('/movies/{id}', UpdateMovieController::class); // tested
     Route::get('/genres', GetGenresController::class); // tested
+    Route::get('/countries', GetCountriesController::class); // tested
     Route::get('/release_dates', GetReleaseDatesController::class); // tested
     Route::group(['middleware' => 'auth:api'], function () {
         Route::post(
@@ -43,5 +45,3 @@ Route::group(['middleware' => 'api'], function () {
         ); // tested (with access token)
     });
 });
-
-
