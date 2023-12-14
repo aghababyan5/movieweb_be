@@ -158,6 +158,12 @@ class MovieService
         return response()->noContent();
     }
 
+    public function getMoviesByGenre($genreId) {
+        $genre = Genre::query()->find($genreId);
+
+        return $genre->movies;
+    }
+
     public function getAllGenres(): Collection
     {
         return Genre::all();

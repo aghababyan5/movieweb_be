@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\UserRegisterController;
 use App\Http\Controllers\Movie\DeleteMovieController;
 use App\Http\Controllers\Movie\GetCountriesController;
 use App\Http\Controllers\Movie\GetGenresController;
+use App\Http\Controllers\Movie\GetMoviesByGenreController;
 use App\Http\Controllers\Movie\GetMoviesController;
 use App\Http\Controllers\Movie\GetReleaseDatesController;
 use App\Http\Controllers\Movie\ShowMovieController;
@@ -32,6 +33,7 @@ Route::group(['middleware' => 'api'], function () {
     Route::delete('/movies/{id}', DeleteMovieController::class); // tested (new)
     Route::post('/movies/{id}', UpdateMovieController::class); // tested (new)
     Route::get('/genres', GetGenresController::class); // tested
+    Route::get('/movies-of-genre/{genreId}', GetMoviesByGenreController::class);
     Route::get('/countries', GetCountriesController::class); // tested
     Route::get('/release_dates', GetReleaseDatesController::class); // tested
     Route::group(['middleware' => 'auth:api'], function () {
