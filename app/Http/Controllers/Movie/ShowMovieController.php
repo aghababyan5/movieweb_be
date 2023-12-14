@@ -6,8 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Services\MovieService;
 use Illuminate\Http\JsonResponse;
 
-class GetMovieController extends Controller
+class ShowMovieController extends Controller
 {
+
     protected $service;
 
     public function __construct(MovieService $movieService)
@@ -17,10 +18,11 @@ class GetMovieController extends Controller
 
     public function __invoke($id): JsonResponse
     {
-        $movie = $this->service->getOne($id);
+        $movie = $this->service->show($id);
 
         return response()->json([
-            'movie' => $movie
+            'movie' => $movie,
         ]);
     }
+
 }

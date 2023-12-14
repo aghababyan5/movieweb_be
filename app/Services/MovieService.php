@@ -9,6 +9,7 @@ use App\Models\ReleaseDate;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -21,19 +22,20 @@ class MovieService
         $imageName = Str::random(32).'.'
             .$data['img']->getClientOriginalExtension();
         Storage::disk('public')->put(
-            '/movie_images',
+            'movie_images/'.$imageName,
             file_get_contents($data['img'])
         );
 
         $sliderImageName = Str::random(32).'.'
             .$data['img_slider']->getClientOriginalExtension();
         Storage::disk('public')->put(
-            '/movie_slider_images',
+            'movie_slider_images/'.$sliderImageName,
             file_get_contents($data['img_slider'])
         );
 
         $genreNames = $data['genres'];
-        $genreIds = Genre::whereIn('name', $genreNames)->pluck('id')->toArray();
+        $genreIds = Genre::whereIn('title', $genreNames)->pluck('id')->toArray(
+        );
 
         $newMovie
             = Movie::query()->create([
@@ -53,34 +55,105 @@ class MovieService
         return $newMovie;
     }
 
-    public function getAll(): Collection
+    public function getAll()
     {
-        return Movie::all();
+        return Movie::with([
+            'genres' => function ($query) {
+                $query->select('title');
+            },
+        ])->get();
     }
 
-    public function getOne($id)
+    public function show($id)
     {
-        return Movie::find($id);
+        $movie = Movie::find($id);
+        if ( ! $movie) {
+            abort(404);
+        }
+
+        return $movie->load([
+            'genres' => function ($query) {
+                $query->select('title');
+            },
+        ]);
     }
 
-    public function destroy($id)
+    public function destroy($id): Response|JsonResponse
     {
-        return Movie::find($id)->delete();
+        $movie = Movie::find($id);
+
+        if ( ! $movie) {
+            abort(404);
+        }
+
+        $movieImage = $movie['img'];
+        $movieSliderImage = $movie['img_slider'];
+
+        Storage::disk('public')->delete('movie_images/'.$movieImage);
+        Storage::disk('public')->delete(
+            'movie_slider_images/'.$movieSliderImage
+        );
+
+        $movie->genres()->detach();
+
+        $movie->delete();
+
+        return response()->noContent();
     }
 
-    public function update(array $data): Response
+    public function update($id, array $data): Response|JsonResponse
     {
-        $movie = Movie::query()->where('id', $data['id']);
+        $movie = Movie::find($id);
 
+        if ( ! $movie) {
+            abort(404);
+        }
+
+        $oldImageName = $movie['img'];
+        $oldSliderImageName = $movie['img_slider'];
+        $newImage = $data['img'];
+        $newSliderImage = $data['img_slider'];
+
+        // Generating new image names
+        $newImageName = Str::random(32).'.'
+            .$newImage->getClientOriginalExtension();
+        $newSliderImageName = Str::random(32).'.'
+            .$newSliderImage->getClientOriginalExtension();
+
+        // Deleting old images
+        Storage::disk('public')->delete('movie_images/'.$oldImageName);
+        Storage::disk('public')->delete(
+            'movie_slider_images/'.$oldSliderImageName
+        );
+
+        // Storing new images
+        Storage::disk('public')->put(
+            'movie_images/'.$newImageName,
+            file_get_contents($newImage)
+        );
+        Storage::disk('public')->put(
+            'movie_slider_images/'.$newSliderImageName,
+            file_get_contents($newSliderImage)
+        );
+
+        // Updating database
         $movie->update([
             'title'        => $data['title'],
             'release_date' => $data['release_date'],
             'country'      => $data['country'],
-            'genre'        => $data['genre'],
             'duration'     => $data['duration'],
-            'img'          => $data['img'],
+            'description'  => $data['description'],
+            'img_slider'   => $newSliderImageName,
+            'img'          => $newImageName,
             'video'        => $data['video'],
+            'imdb_score'   => $data['imdb_score'],
         ]);
+
+        // Syncing genres
+        $genreNames = $data['genres'];
+        $genreIds = Genre::whereIn('title', $genreNames)->pluck('id')->toArray(
+        );
+        $movie->genres()->sync($genreIds);
 
         return response()->noContent();
     }

@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Movie;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\MovieUpdateRequest;
-use App\Models\Movie;
+use App\Http\Requests\MovieRequest;
 use App\Services\MovieService;
 use Illuminate\Http\JsonResponse;
 
 class UpdateMovieController extends Controller
 {
+
     protected $service;
 
     public function __construct(MovieService $movieService)
@@ -17,14 +17,13 @@ class UpdateMovieController extends Controller
         $this->service = $movieService;
     }
 
-    public function __invoke(MovieUpdateRequest $request, $id): JsonResponse
+    public function __invoke(MovieRequest $request, $id): JsonResponse
     {
-        $movie = Movie::findOrFail($id);
-
-        $movie->update($request->validated());
+        $this->service->update($id, $request->validated());
 
         return response()->json([
-            'message' => 'Movie updated successfully'
+            'message' => 'Movie updated successfully',
         ]);
     }
+
 }
