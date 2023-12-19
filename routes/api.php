@@ -32,18 +32,21 @@ Route::group(['middleware' => 'api'], function () {
     Route::get('/movies/{id}', ShowMovieController::class); // tested (new)
     Route::delete('/movies/{id}', DeleteMovieController::class); // tested (new)
     Route::post('/movies/{id}', UpdateMovieController::class); // tested (new)
-    Route::get('/genres', GetGenresController::class); // tested
+    Route::get('/genres', GetGenresController::class); // tested (new)
     Route::get('/movies-of-genre/{genreId}', GetMoviesByGenreController::class);
-    Route::get('/countries', GetCountriesController::class); // tested
-    Route::get('/release_dates', GetReleaseDatesController::class); // tested
+    Route::get('/countries', GetCountriesController::class); // tested (new)
+    Route::get(
+        '/release-dates',
+        GetReleaseDatesController::class
+    ); // tested (new)
     Route::group(['middleware' => 'auth:api'], function () {
         Route::post(
-          '/logout',
-          LogoutController::class
+            '/logout',
+            LogoutController::class
         ); // tested (with access_token)
         Route::get(
-          '/user',
-          GetUserController::class
+            '/user',
+            GetUserController::class
         ); // tested (with access token)
     });
 });

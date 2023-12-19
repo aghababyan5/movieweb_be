@@ -21,13 +21,13 @@ class MovieService
     {
         $imageName = Str::random(32).'.'
             .$data['img']->getClientOriginalExtension();
+        $sliderImageName = Str::random(32).'.'
+            .$data['img_slider']->getClientOriginalExtension();
+
         Storage::disk('public')->put(
             'movie_images/'.$imageName,
             file_get_contents($data['img'])
         );
-
-        $sliderImageName = Str::random(32).'.'
-            .$data['img_slider']->getClientOriginalExtension();
         Storage::disk('public')->put(
             'movie_slider_images/'.$sliderImageName,
             file_get_contents($data['img_slider'])
@@ -36,18 +36,23 @@ class MovieService
         $genreNames = $data['genres'];
         $genreIds = Genre::whereIn('title', $genreNames)->pluck('id')->toArray(
         );
+        $release_date_id = ReleaseDate::where(
+            'release_date',
+            $data['release_date']
+        )->first()->id;
+        $country_id = Country::where('title', $data['country'])->first()->id;
 
         $newMovie
             = Movie::query()->create([
-            'title'        => $data['title'],
-            'release_date' => $data['release_date'],
-            'country'      => $data['country'],
-            'duration'     => $data['duration'],
-            'description'  => $data['description'],
-            'img_slider'   => $sliderImageName,
-            'img'          => $imageName,
-            'video'        => $data['video'],
-            'imdb_score'   => $data['imdb_score'],
+            'title'           => $data['title'],
+            'duration'        => $data['duration'],
+            'description'     => $data['description'],
+            'img_slider'      => $sliderImageName,
+            'img'             => $imageName,
+            'video'           => $data['video'],
+            'imdb_score'      => $data['imdb_score'],
+            'release_date_id' => $release_date_id,
+            'country_id'      => $country_id
         ]);
 
         $newMovie->genres()->attach($genreIds);
@@ -57,17 +62,24 @@ class MovieService
 
     public function getAll()
     {
-        return Movie::with([
+        $movies = Movie::with([
             'genres' => function ($query) {
                 $query->select('title');
             },
         ])->get();
+
+        foreach ($movies as $movie) {
+            $movieCountry = $movie->country;
+            $movie['country'] = $movieCountry['title'];
+        }
+
+        return $movies;
     }
 
     public function show($id)
     {
         $movie = Movie::find($id);
-        if ( ! $movie) {
+        if (!$movie) {
             abort(404);
         }
 
@@ -82,7 +94,7 @@ class MovieService
     {
         $movie = Movie::find($id);
 
-        if ( ! $movie) {
+        if (!$movie) {
             abort(404);
         }
 
@@ -105,7 +117,7 @@ class MovieService
     {
         $movie = Movie::find($id);
 
-        if ( ! $movie) {
+        if (!$movie) {
             abort(404);
         }
 
@@ -158,7 +170,8 @@ class MovieService
         return response()->noContent();
     }
 
-    public function getMoviesByGenre($genreId) {
+    public function getMoviesByGenre($genreId)
+    {
         $genre = Genre::query()->find($genreId);
 
         return $genre->movies;

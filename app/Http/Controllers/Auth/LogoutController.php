@@ -9,16 +9,16 @@ use Illuminate\Http\Request;
 
 class LogoutController extends Controller
 {
-    protected $userService;
+    protected $service;
 
     public function __construct(UserService $userService)
     {
-        $this->userService = $userService;
+        $this->service = $userService;
     }
 
     public function __invoke(Request $request): JsonResponse
     {
-        $this->userService->logout($request);
+        $this->service->logout($request);
 
         return response()->json(['message' => 'User logged out successfully']);
     }
