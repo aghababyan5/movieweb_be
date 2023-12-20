@@ -24,23 +24,14 @@ class MovieService
         $sliderImageName = Str::random(32).'.'
             .$data['img_slider']->getClientOriginalExtension();
 
-        Storage::disk('public')->put(
-            'movie_images/'.$imageName,
-            file_get_contents($data['img'])
-        );
-        Storage::disk('public')->put(
-            'movie_slider_images/'.$sliderImageName,
-            file_get_contents($data['img_slider'])
-        );
-
         $genreNames = $data['genres'];
-        $genreIds = Genre::whereIn('title', $genreNames)->pluck('id')->toArray(
+        $genreIds = Genre::query()->whereIn('title', $genreNames)->pluck('id')->toArray(
         );
         $release_date_id = ReleaseDate::where(
             'release_date',
             $data['release_date']
         )->first()->id;
-        $country_id = Country::where('title', $data['country'])->first()->id;
+        $country_id = Country::query()->where('title', $data['country'])->first()->id;
 
         $newMovie
             = Movie::query()->create([
@@ -57,10 +48,19 @@ class MovieService
 
         $newMovie->genres()->attach($genreIds);
 
+        Storage::disk('public')->put(
+            'movie_images/'.$imageName,
+            file_get_contents($data['img'])
+        );
+        Storage::disk('public')->put(
+            'movie_slider_images/'.$sliderImageName,
+            file_get_contents($data['img_slider'])
+        );
+
         return $newMovie;
     }
 
-    public function getAll()
+    public function getAll(): Collection|array
     {
         $movies = Movie::with([
             'genres' => function ($query) {
