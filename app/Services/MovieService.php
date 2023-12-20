@@ -72,8 +72,8 @@ class MovieService
         ])->get();
 
         foreach ($movies as $movie) {
-            $movieCountry = $movie->country;
-            $movie['country'] = $movieCountry['title'];
+            $movie['country'] = $movie->country['title'];
+            $movie['release_date'] = $movie->release_date['title'];
         }
 
         return $movies;
@@ -85,6 +85,9 @@ class MovieService
         if ( ! $movie) {
             abort(404);
         }
+
+        $movie['country'] = $movie->country['title'];
+        $movie['release_date'] = $movie->release_date['title'];
 
         return $movie->load([
             'genres' => function ($query) {
@@ -180,7 +183,7 @@ class MovieService
         return response()->noContent();
     }
 
-    public function getMoviesByGenre($genreId)
+    public function getMoviesOfGenre($genreId)
     {
         $genre = Genre::query()->find($genreId);
 

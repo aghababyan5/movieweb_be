@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Movie;
 use App\Http\Controllers\Controller;
 use App\Services\MovieService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
-class GetMoviesByGenreController extends Controller
+class GetMoviesOfGenreController extends Controller
 {
+
     protected $service;
 
     public function __construct(MovieService $movieService)
@@ -18,10 +18,11 @@ class GetMoviesByGenreController extends Controller
 
     public function __invoke($genreId): JsonResponse
     {
-        $movies = $this->service->getMoviesByGenre($genreId);
+        $movies = $this->service->getMoviesOfGenre($genreId);
 
         return response()->json([
-            'movies' => $movies
+            'movies' => $movies,
         ]);
     }
+
 }
