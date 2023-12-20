@@ -187,7 +187,10 @@ class MovieService
     {
         $genre = Genre::query()->find($genreId);
 
-        return $genre->movies;
+        $movies = $genre->movies;
+        //        foreach($movies as $movie) {
+        //            $movie
+        //        }
     }
 
     public function getAllGenres(): Collection
